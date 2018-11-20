@@ -18,9 +18,9 @@ var renderCloud = function (ctx, x, y, width, height, color) {
   ctx.fillRect(x, y, width, height);
 };
 
-var renderCloudText = function (ctx, text, x, y, color) {
+var renderCloudText = function (ctx, text, x, y) {
   ctx.font = '16px PT Mono';
-  ctx.fillStyle = color;
+  ctx.fillStyle = '#000';
   ctx.fillText(text, x, y);
 };
 
@@ -35,18 +35,6 @@ var getMaxElement = function (arr) {
   return maxElement;
 };
 
-var randomColor = function (ctx) {
-  ctx.fillStyle = 'rgba(0, 0, 255, ' + Math.random().toFixed(1) + ')';
-};
-
-var textColor = function (ctx) {
-  ctx.fillStyle = '#000';
-};
-
-var winnerColor = function (ctx) {
-  ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-};
-
 window.renderStatistics = function (ctx, players, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, CLOUD_WIDTH, CLOUD_HEIGHT, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, CLOUD_WIDTH, CLOUD_HEIGHT, '#fff');
@@ -57,14 +45,10 @@ window.renderStatistics = function (ctx, players, times) {
   var maxTime = getMaxElement(times);
 
   for (var i = 0; i < players.length; i++) {
-    if (players[i] === 'Вы') {
-      renderCloudText(ctx, players[i], CLOUD_X + BAR_GAP + BAR_COL * i, CLOUD_HEIGHT, textColor(ctx));
-      renderCloud(ctx, CLOUD_X + BAR_GAP + BAR_COL * i, CLOUD_HEIGHT - TEXT_MARGIN, BAR_WIDTH, ((BAR_HEIGHT * Math.round(times[i])) / maxTime) * -1, winnerColor(ctx));
-      renderCloudText(ctx, Math.round(times[i]), CLOUD_X + BAR_GAP + BAR_COL * i, (CLOUD_HEIGHT - TEXT_GAP) - (BAR_HEIGHT * Math.round(times[i])) / maxTime, textColor(ctx));
-    } else {
-      renderCloudText(ctx, players[i], CLOUD_X + BAR_GAP + BAR_COL * i, CLOUD_HEIGHT, textColor(ctx));
-      renderCloud(ctx, CLOUD_X + BAR_GAP + BAR_COL * i, CLOUD_HEIGHT - TEXT_MARGIN, BAR_WIDTH, ((BAR_HEIGHT * Math.round(times[i])) / maxTime) * -1, randomColor(ctx));
-      renderCloudText(ctx, Math.round(times[i]), CLOUD_X + BAR_GAP + BAR_COL * i, (CLOUD_HEIGHT - TEXT_GAP) - (BAR_HEIGHT * Math.round(times[i])) / maxTime, textColor(ctx));
-    }
+    var barColor = (players[i] === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'rgba(0, 0, 255, ' + Math.random().toFixed(1) + ')';
+
+    renderCloud(ctx, CLOUD_X + BAR_GAP + BAR_COL * i, CLOUD_HEIGHT - TEXT_MARGIN, BAR_WIDTH, ((BAR_HEIGHT * Math.round(times[i])) / maxTime) * -1, barColor);
+    renderCloudText(ctx, players[i], CLOUD_X + BAR_GAP + BAR_COL * i, CLOUD_HEIGHT);
+    renderCloudText(ctx, Math.round(times[i]), CLOUD_X + BAR_GAP + BAR_COL * i, (CLOUD_HEIGHT - TEXT_GAP) - (BAR_HEIGHT * Math.round(times[i])) / maxTime);
   }
 };
